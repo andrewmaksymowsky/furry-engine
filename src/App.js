@@ -1,17 +1,35 @@
 import React from 'react'
-import Canvas from './Canvas'
+import { useCanvas } from './hooks/useCanvas';
+import './App.css';
 
 function App() {
 
-  const draw = (ctx, frameCount) => {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    ctx.fillStyle = '#000000'
-    ctx.beginPath()
-    ctx.arc(50, 100, 20*Math.sin(frameCount*0.05)**2, 0, 2*Math.PI)
-    ctx.fill()
-  }
+    const [ coordinates, setCoordinates, canvasRef, canvasWidth, canvasHeight ] = useCanvas();
 
-  return <Canvas draw={draw} />
-}
+    const handleCanvasClick=(event)=>{
+        const currentCoord = { x: event.clientX, y: event.clientY };
+        setCoordinates([...coordinates, currentCoord]);
+    };
+
+    const handleClearCanvas=(event)=>{
+        setCoordinates([]);
+    };
+
+    return (
+        <main className="App-main">
+            <canvas
+                className="App-canvas"
+                ref={canvasRef}
+                width={canvasWidth}
+                height={canvasHeight}
+                onClick={handleCanvasClick} />
+
+            <div className="button">
+                <button onClick={handleClearCanvas} > CLEAR </button>
+            </div>
+        </main>
+    );
+};
+
 
 export default App;
